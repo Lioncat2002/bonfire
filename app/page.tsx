@@ -1,13 +1,13 @@
 "use client";
+
+import { DataPage } from "@/components/custom/DataPage";
+import { NavBar } from "@/components/custom/NavBar";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { useEffect } from "react";
 
 const RAYDIUM_PUBLIC_KEY = "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"; //CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK
-const HTTP_URL =
-  "";
-const WSS_URL =
-  "";
+const HTTP_URL = process.env.HTTP_URL!;
+const WSS_URL = process.env.WSS_URL!;
 const RAYDIUM = new PublicKey(RAYDIUM_PUBLIC_KEY);
 const INSTRUCTION_NAME = "initialize2";
 
@@ -23,10 +23,10 @@ async function fetchRaydiumMints(txId: string, connection: Connection) {
       commitment: "confirmed",
     });
 
-    //@ts-ignore
+    //@ts-expect-error no proper types in web3js for some of the classes
     const accounts = (tx?.transaction.message.instructions).find(
       (ix) => ix.programId.toBase58() === RAYDIUM_PUBLIC_KEY
-      //@ts-ignore
+      //@ts-expect-error no proper types in web3js for some of the classes
     ).accounts as PublicKey[];
 
     if (!accounts) {
@@ -53,9 +53,9 @@ async function fetchRaydiumMints(txId: string, connection: Connection) {
       const token = await metaplex
         .nfts()
         .findByMint({ mintAddress: tokenAAccount });
-      let tokenName = token.name;
-      let tokenSymbol = token.symbol;
-      let tokenLogo = token.json!.image;
+      const tokenName = token.name;
+      const tokenSymbol = token.symbol;
+      //let tokenLogo = token.json!.image;
       console.log(tokenName, tokenSymbol, token);
     }
 
@@ -65,7 +65,7 @@ async function fetchRaydiumMints(txId: string, connection: Connection) {
     ];
 
     console.log("New LP Found");
-    console.table(metadataAccountInfo);
+    console.table(displayData);
   } catch {
     console.log("Error fetching transaction:", txId);
     return;
@@ -94,11 +94,10 @@ async function startConnection(
   );
 }
 export default function Home() {
-  useEffect(() => {
-    async function fetchData() {
-      startConnection(connection, RAYDIUM, INSTRUCTION_NAME);
-    }
-    fetchData();
-  }, []);
-  return <div>Pussycat</div>;
+  return (
+    <div className="p-8">
+      <NavBar />
+      <DataPage />
+    </div>
+  );
 }
