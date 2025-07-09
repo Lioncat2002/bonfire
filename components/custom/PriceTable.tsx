@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Table,
   TableBody,
@@ -11,10 +11,36 @@ import { Input } from "../ui/input";
 import { WalletMinimal } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
-import { SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
+import { getPrice } from "@/app/server/getPrice";
+import { Pool } from "@/app/server/models/pool";
+
+function formatNumber(num: number): string {
+  if (Math.abs(num) >= 1_000_000) {
+    return (num / 1_000_000).toFixed(4).replace(/\.0$/, "") + "M";
+  }
+  if (Math.abs(num) >= 1_000) {
+    return (num / 1_000).toFixed(4).replace(/\.0$/, "") + "K";
+  }
+  return num.toFixed(4);
+}
+
+function get24hPriceChange(current: number, previous: number): number {
+  if (previous === 0) return 0;
+  return ((current - previous) / previous) * 100;
+}
 
 export function PriceTable() {
-    const [amt,setAmt]=useState<number>(0.01)
+  const [amt, setAmt] = useState<number>(0.01);
+  const [pools, setPools] = useState<Pool[]>();
+  useEffect(() => {
+    async function fetchPrice() {
+      const p = await getPrice();
+      setPools(p);
+    }
+    fetchPrice();
+  }, []);
+  console.log(pools);
   return (
     <div>
       <div className="flex flex-row w-[100%] justify-end space-x-4 ">
@@ -28,52 +54,40 @@ export function PriceTable() {
             <Label htmlFor="new">NEW</Label>
           </div>
         </RadioGroup>
-        <div className="flex flex-row space-x-2  bg-gray-200 rounded-sm pl-2 border-2 border-gray-400">
-          <WalletMinimal className="pt-2" />
-          <div className="">Buy</div>
-          <Input
-            type="number"
-            className="bg-white font-semibold "
-            placeholder="0.01"
-            value={amt}
-            onChange={(e)=>setAmt(parseFloat(e.target.value))}
-          />
-        </div>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">TOKEN</TableHead>
-            <TableHead>AGE</TableHead>
-            <TableHead>MARKET CAP</TableHead>
-            <TableHead>LIQUIDITY</TableHead>
-            <TableHead>24H VOL</TableHead>
-            <TableHead>24H TXNS</TableHead>
-            <TableHead>PRICE</TableHead>
-            <TableHead>1H</TableHead>
-            <TableHead>24H</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">TRUMP/SOL</TableCell>
-            <TableCell>27s</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="flex flex-row justify-end w-[100px]">
-              <div className="flex flex-row">
-                <p>{amt}</p>
-                <WalletMinimal className="p-[2px]" />
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <div className="flex flex-row space-x-2">
+        <div className="w-2/3">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>TOKEN</TableHead>
+                <TableHead>PRICE</TableHead>
+                <TableHead>24H VOL.</TableHead>
+                <TableHead>24H CHANGE</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {pools?.map((pool, idx) => {
+                return (
+                  <TableRow key={idx}>
+                    <TableCell className="font-medium">
+                      {pool.mintASymbol}/{pool.mintBSymbol}
+                    </TableCell>
+                    <TableCell>$ {pool.price.toFixed(6)}</TableCell>
+                    <TableCell>$ {formatNumber(pool.volume24h)}</TableCell>
+                    <TableCell className={get24hPriceChange(pool.price, pool.price1day)>0?"text-green-400":"text-red-400"}>
+                      {get24hPriceChange(pool.price, pool.price1day)>0?"+":""}
+                      {get24hPriceChange(pool.price, pool.price1day).toFixed(2)}
+                      %
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="w-1/3 font-semibold text-2xl">TRADE</div>
+      </div>
     </div>
   );
 }
