@@ -4,6 +4,8 @@ export interface Pool {
   mintBSymbol: string;
   mintBAddress: string;
 
+  mintBLogo: string
+
   price: number;
   price1day: number;
 
