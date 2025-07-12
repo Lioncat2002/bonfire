@@ -16,6 +16,7 @@ export async function getPrice() {
         mintBAddress: pool.mintB.address,
         mintBSymbol: pool.mintB.symbol,
         mintBLogo: pool.mintB.logoURI,
+        mintALogo: pool.mintA.logoURI,
         price: pool.price,
         price1day:pool.day.priceMin,
         mintAmountA: pool.mintAmountA,
@@ -26,6 +27,5 @@ export async function getPrice() {
 
     pools.push(p)
   }
-  console.log(resp.data.data.data)
   return pools
 }
