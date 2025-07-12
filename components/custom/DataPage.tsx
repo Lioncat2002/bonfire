@@ -4,7 +4,7 @@ import { PriceTable } from "./PriceTable";
 
 export function DataPage() {
   return (
-    <Tabs defaultValue="new">
+    <Tabs defaultValue="trending">
       <TabsList>
         <TabsTrigger value="trending">TRENDING</TabsTrigger>
         <TabsTrigger value="new">NEW</TabsTrigger>

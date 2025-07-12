@@ -1,4 +1,3 @@
-
 import { useRef } from "react";
 
 const slippageOptions = [
@@ -28,7 +27,7 @@ export function SlippageSlider({ slippage, onChange }: SlippageSliderProps) {
   return (
     <div className="p-4 w-full max-w-sm">
       <label className="block mb-2 font-semibold text-sm text-gray-700">
-        SLIPPAGE: <span className="text-black">{slippage / 100}%</span>
+        SLIPPAGE: <span className="text-black">{slippage / 100} %</span>
       </label>
       <input
         ref={sliderRef}

@@ -1,8 +1,10 @@
 export interface Pool {
   mintASymbol: string;
   mintAAddress: string;
+  mintADecimals: number;
   mintBSymbol: string;
   mintBAddress: string;
+  mintBDecimals: number;
 
   mintBLogo: string;
   mintALogo: string;
