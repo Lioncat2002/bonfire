@@ -1,13 +1,13 @@
 "use client";
+import { useEffect, useState } from "react";
+import { ArrowDownUp } from "lucide-react";
 import { Pool } from "@/app/server/models/pool";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { ArrowDownUp } from "lucide-react";
 import { getQuote, QuoteData } from "@/app/client/getQuote";
-import { useState } from "react";
 import { SlippageSlider } from "./SlippageSlider";
+import { useDebounce } from "@/app/client/DebouceHook";
 
 type TradeCardProps = {
   selectedPair?: Pool;
@@ -17,18 +17,35 @@ export function TradeCard(props: TradeCardProps) {
   const [inAmt, setInAmt] = useState(0.0);
   const [outAmt, setOutAmt] = useState(0.0);
   const [slippage, setSlippage] = useState(10);
-  async function tradeQuote() {
-    let data: QuoteData = {
-      inputMint: props.selectedPair?.mintAAddress!,
-      outputMint: props.selectedPair?.mintBAddress!,
-      slippage: 50,
-      amount: (
-        inAmt * Math.pow(10, props.selectedPair?.mintADecimals!)
-      ).toString(),
-    };
-    const response = await getQuote(data);
-    setOutAmt(response.outAmount);
-  }
+
+  const debouncedAmt = useDebounce(inAmt, 800);
+
+  // Fetch quote when debouncedAmt changes
+  useEffect(() => {
+    if (!props.selectedPair || debouncedAmt <= 0) return;
+
+    async function fetchQuote() {
+      const quoteData: QuoteData = {
+        inputMint: props.selectedPair?.mintAAddress!,
+        outputMint: props.selectedPair?.mintBAddress!,
+        slippage,
+        amount: (
+          debouncedAmt * Math.pow(10, props.selectedPair?.mintADecimals!)
+        ).toString(),
+      };
+
+      try {
+        const response = await getQuote(quoteData);
+        setOutAmt(parseFloat(response.outAmount) / Math.pow(10, props.selectedPair?.mintBDecimals!));
+      } catch (err) {
+        console.error("Quote fetch failed", err);
+        setOutAmt(0);
+      }
+    }
+
+    fetchQuote();
+  }, [debouncedAmt, props.selectedPair, slippage]);
+
   return (
     <Card>
       <CardHeader>
@@ -36,12 +53,9 @@ export function TradeCard(props: TradeCardProps) {
       </CardHeader>
 
       <CardContent className="flex flex-col space-y-4">
-        {/* FROM BLOCK */}
+        {/* FROM Block */}
         <div>
-          <Label
-            htmlFor="inputAmt"
-            className="mb-1 block text-sm text-muted-foreground"
-          >
+          <Label htmlFor="inputAmt" className="mb-1 block text-sm text-muted-foreground">
             FROM
           </Label>
           <div className="flex items-center justify-between rounded-xl border border-gray-300 bg-white px-4 py-3 shadow-sm transition focus-within:ring-2 focus-within:ring-black">
@@ -52,10 +66,7 @@ export function TradeCard(props: TradeCardProps) {
               className="flex-1 bg-transparent text-lg font-medium outline-none placeholder:text-gray-400"
               placeholder="0.0"
               value={inAmt}
-              onChange={(e) => {
-                setInAmt(parseFloat(e.target.value));
-                setTimeout(tradeQuote, 1000);
-              }}
+              onChange={(e) => setInAmt(parseFloat(e.target.value))}
             />
             <div className="text-right text-sm font-semibold text-black">
               {props.selectedPair?.mintASymbol}
@@ -67,12 +78,9 @@ export function TradeCard(props: TradeCardProps) {
           <ArrowDownUp size={16} />
         </div>
 
-        {/* TO BLOCK */}
+        {/* TO Block */}
         <div>
-          <Label
-            htmlFor="outAmt"
-            className="mb-1 block text-sm text-muted-foreground"
-          >
+          <Label htmlFor="outAmt" className="mb-1 block text-sm text-muted-foreground">
             TO
           </Label>
           <div className="flex items-center justify-between rounded-xl border border-gray-300 bg-white px-4 py-3 shadow-sm transition focus-within:ring-2 focus-within:ring-black">
@@ -82,9 +90,8 @@ export function TradeCard(props: TradeCardProps) {
               inputMode="decimal"
               className="flex-1 bg-transparent text-lg font-medium outline-none placeholder:text-gray-400"
               placeholder="0.0"
-              min={0.0}
               value={outAmt}
-              onChange={(e) => setOutAmt(parseFloat(e.target.value))}
+              readOnly
             />
             <div className="text-right text-sm font-semibold text-black">
               {props.selectedPair?.mintBSymbol}
@@ -92,7 +99,7 @@ export function TradeCard(props: TradeCardProps) {
           </div>
         </div>
 
-        {/* SLIPPAGE & BUTTON */}
+        {/* Slippage */}
         <SlippageSlider slippage={slippage} onChange={setSlippage} />
 
         <Button className="mt-2 h-12 rounded-xl text-md font-semibold transition active:scale-95 duration-150 ease-in-out">
