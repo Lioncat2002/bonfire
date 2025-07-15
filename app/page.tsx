@@ -10,7 +10,7 @@ export default function Home() {
       <Toaster />
       <NavBar />
       <DataPage />
-      <footer><a href="">Check us out of github</a></footer>
+      <footer><a href="https://github.com/Lioncat2002/bonfire">Check us out of github</a></footer>
     </div>
   );
 }
