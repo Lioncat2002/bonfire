@@ -10,7 +10,14 @@ export default function Home() {
       <Toaster />
       <NavBar />
       <DataPage />
-      <footer><a href="https://github.com/Lioncat2002/bonfire">Check us out of github</a></footer>
+      <footer className="w-[100%] text-center">
+        <a
+          className="underline"
+          href="https://github.com/Lioncat2002/bonfire" target="_blank"
+        >
+          Check us out of github 🐰
+        </a>
+      </footer>
     </div>
   );
 }
