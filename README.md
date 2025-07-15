@@ -1,4 +1,4 @@
 # Bonfire exchange
-A small work in progress DEX, currently using Raydium for liquidity and Jupiter for Swaps.
+A small work in progress real-time price analytics platform.
 
 Made in a weekend :)
