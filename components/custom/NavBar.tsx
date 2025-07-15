@@ -56,13 +56,5 @@ export function NavBar() {
 
   const wallets = useMemo(() => [], []);
 
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <NavBarContent />
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
+  return <NavBarContent />;
 }

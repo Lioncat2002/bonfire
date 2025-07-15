@@ -4,13 +4,13 @@ import { PriceTable } from "./PriceTable";
 
 export function DataPage() {
   return (
-    <Tabs defaultValue="trending">
+    <Tabs defaultValue="tokens">
       <TabsList>
-        <TabsTrigger value="trending">TRENDING</TabsTrigger>
-        <TabsTrigger value="new">NEW</TabsTrigger>
+        <TabsTrigger value="tokens">TOKENS</TabsTrigger>
+        <TabsTrigger value="leader-board">LEADER BOARD</TabsTrigger>
       </TabsList>
 
-      <TabsContent value="new">
+      <TabsContent value="leader-board">
         <div className="flex flex-col items-center justify-center p-8 text-center space-y-4 animate-fade-in">
           <Sparkles className="w-12 h-12 text-yellow-500 animate-pulse" />
           <h2 className="text-xl font-semibold">Coming Soon</h2>
@@ -22,7 +22,7 @@ export function DataPage() {
         </div>
       </TabsContent>
 
-      <TabsContent value="trending">
+      <TabsContent value="tokens">
         <PriceTable />
       </TabsContent>
     </Tabs>

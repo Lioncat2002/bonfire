@@ -2,12 +2,12 @@
 
 import { DataPage } from "@/components/custom/DataPage";
 import { NavBar } from "@/components/custom/NavBar";
-import { Metaplex } from "@metaplex-foundation/js";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   return (
     <div className="p-8">
+      <Toaster />
       <NavBar />
       <DataPage />
     </div>
