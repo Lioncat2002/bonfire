@@ -157,7 +157,7 @@ export function TradeCard(props: TradeCardProps) {
 
         {/* Slippage */}
         <SlippageSlider slippage={slippage} onChange={setSlippage} />
-
+            <p className="text-xs text-right text-gray-500">0.2 % platform fee</p>
         <Button onClick={executeSwap} className="mt-2 h-12 rounded-xl text-md font-semibold transition active:scale-95 duration-150 ease-in-out">
           SWAP
         </Button>

@@ -38,7 +38,7 @@ function CustomWalletButton() {
 function NavBarContent() {
   return (
     <div className="flex flex-row justify-between p-4">
-      <h1 className="text-4xl font-semibold">PARSEC</h1>
+      <h1 className="text-4xl font-semibold">BONFIRE</h1>
       <CustomWalletButton />
     </div>
   );
