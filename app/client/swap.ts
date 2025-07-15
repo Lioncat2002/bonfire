@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Connection, VersionedTransaction } from "@solana/web3.js";
 import toast from "react-hot-toast";
 
@@ -5,7 +6,7 @@ const BASE_URL = "https://lite-api.jup.ag";
 const PLATFORM_FEE = 20;
 
 export async function BuildSwapTransaction(quote: string, publicKey: string) {
-  let quoteResponse = JSON.parse(quote);
+  const quoteResponse = JSON.parse(quote);
 
   let tokenAccount = "";
 
@@ -69,7 +70,7 @@ export async function SendSwapTransaction(
     "https://api.mainnet-beta.solana.com",
     "confirmed"
   );
-  let swapResponse = JSON.parse(swap);
+  const swapResponse = JSON.parse(swap);
   const transactionBase64 = swapResponse.swapTransaction;
   let transaction = VersionedTransaction.deserialize(
     Buffer.from(transactionBase64, "base64")

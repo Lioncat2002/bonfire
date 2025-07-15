@@ -7,12 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getPrice } from "@/app/server/getPrice";
 import { Pool } from "@/app/server/models/pool";
 import { TradeCard } from "./TradeCard";
 import { Button } from "../ui/button";
-import { animate } from "animejs";
 function formatNumber(num: number): string {
   if (Math.abs(num) >= 1_000_000) {
     return (num / 1_000_000).toFixed(4).replace(/\.0$/, "") + "M";
@@ -84,7 +83,7 @@ export function PriceTable() {
                   <TableCell>
                     <Button
                       className="transition active:scale-95 duration-150 ease-in-out"
-                      onClick={(e) => {
+                      onClick={() => {
                         setSelectedPair(pool);
                       }}
                     >

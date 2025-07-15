@@ -1,4 +1,4 @@
-import { Clock, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { PriceTable } from "./PriceTable";
 
@@ -15,7 +15,7 @@ export function DataPage() {
           <Sparkles className="w-12 h-12 text-yellow-500 animate-pulse" />
           <h2 className="text-xl font-semibold">Coming Soon</h2>
           <p className="text-gray-500 text-sm max-w-sm">
-            We're cooking up something new and exciting! 🚀
+            {"We're cooking up something new and exciting! 🚀"}
             <br />
             Stay tuned for upcoming features.
           </p>

@@ -1,13 +1,6 @@
 "use client";
-import {
-  ConnectionProvider,
-  WalletProvider,
-} from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl } from "@solana/web3.js";
 import { WalletMinimal } from "lucide-react";
 
-import { useMemo } from "react";
 import "@solana/wallet-adapter-react-ui/styles.css";
 
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -52,9 +45,6 @@ function NavBarContent() {
 }
 
 export function NavBar() {
-  const endpoint = clusterApiUrl("mainnet-beta");
-
-  const wallets = useMemo(() => [], []);
 
   return <NavBarContent />;
 }

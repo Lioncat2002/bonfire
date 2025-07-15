@@ -22,28 +22,29 @@ export function TradeCard(props: TradeCardProps) {
   const [slippage, setSlippage] = useState(10);
   const [isReversed, setIsReversed] = useState(false);
   const [quote, setQuote] = useState({});
-  const { publicKey, connected, wallet, sendTransaction, signTransaction } =
+  const { publicKey, sendTransaction, signTransaction } =
     useWallet();
 
   const debouncedAmt = useDebounce(inAmt, 800);
 
   useEffect(() => {
     if (!props.selectedPair || debouncedAmt <= 0) return;
-
+    
     async function fetchQuote() {
+      if (!props.selectedPair) return;
       const inputMint = isReversed
-        ? props.selectedPair?.mintBAddress!
-        : props.selectedPair?.mintAAddress!;
+        ? props.selectedPair.mintBAddress
+        : props.selectedPair.mintAAddress;
       const outputMint = isReversed
-        ? props.selectedPair?.mintAAddress!
-        : props.selectedPair?.mintBAddress!;
+        ? props.selectedPair.mintAAddress
+        : props.selectedPair.mintBAddress;
 
       const inputDecimals = isReversed
-        ? props.selectedPair?.mintBDecimals!
-        : props.selectedPair?.mintADecimals!;
+        ? props.selectedPair.mintBDecimals
+        : props.selectedPair.mintADecimals;
       const outputDecimals = isReversed
-        ? props.selectedPair?.mintADecimals!
-        : props.selectedPair?.mintBDecimals!;
+        ? props.selectedPair.mintADecimals
+        : props.selectedPair.mintBDecimals;
 
       const quoteData: QuoteData = {
         inputMint,
@@ -70,10 +71,11 @@ export function TradeCard(props: TradeCardProps) {
 
   async function executeSwap() {
     const quoteStr = JSON.stringify(quote);
-
+    if(!publicKey)
+      return;
     const response = await BuildSwapTransaction(
       quoteStr,
-      publicKey?.toString()!
+      publicKey.toString()
     );
     await SendSwapTransaction(response, signTransaction, sendTransaction);
   }
