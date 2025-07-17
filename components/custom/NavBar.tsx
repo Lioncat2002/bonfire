@@ -39,12 +39,20 @@ function NavBarContent() {
   return (
     <div className="flex flex-row justify-between p-4">
       <h1 className="text-4xl font-semibold">BONFIRE</h1>
-      <CustomWalletButton />
+      <div className="flex flex-row space-x-4">
+        <a
+          className="px-4 py-2 text-gray-700 hover:text-gray-900 border-2 rounded-md hover:border-gray-900"
+          href="/launchpad"
+        >
+          Launchpad
+        </a>
+         <CustomWalletButton />
+      </div>
+     
     </div>
   );
 }
 
 export function NavBar() {
-
   return <NavBarContent />;
 }
